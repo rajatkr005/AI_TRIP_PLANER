@@ -1,0 +1,7 @@
+llm:
+  google:
+    provider: "google"
+    model_name: "gemini-3.5-flash-lite"  
+  groq:
+    provider: "groq"
+    model_name: "deepseek-r1-distill-llama-70b"
