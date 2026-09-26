@@ -1,0 +1,22 @@
+langchain
+langchain_groq
+langchain_community
+langchain_openai
+python_dotenv
+pandas
+numpy
+langchain_google_genai
+langchain_text_splitters
+faiss-cpu
+fastapi
+uvicorn
+streamlit
+pydantic
+httpx
+requests
+langchain_experimental
+langchain_google_community
+langchain_tavily
+
+
+-e .

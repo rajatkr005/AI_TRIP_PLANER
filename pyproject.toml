@@ -7,7 +7,9 @@ authors = [
     { name = "rajatkr005", email = "rajatkrace@gmail.com" }
 ]
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "setuptools>=84.0.0",
+]
 
 [project.scripts]
 ai-trip-planer = "ai_trip_planer:main"
