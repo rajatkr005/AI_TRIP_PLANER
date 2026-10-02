@@ -27,7 +27,13 @@ print(shutil.which("uv"))```
 ## Use this command from  your virtual env
 ```.env\Scripts\activate```
 
+```
+uvicorn main:cpp --reload --port 8000
+```
 
+```
+streamlit run streamlit_app.py
+```
 
 
 
