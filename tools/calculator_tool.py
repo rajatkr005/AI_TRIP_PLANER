@@ -1,6 +1,27 @@
-GOOGLE_API_KEY=""
-GPLACES_API_KEY=""
-FOURSQUARE_API_KEY=""
-TAVILY_API_KEY=""
-OPENWEATHERMAP_API_KEY=""
-EXCHANGE_RATE_API_KEY=""
+from utils.expense_calculator import Calculator
+from typing import List
+from langchain.tools import tool
+
+class CalculatorTool():
+    def __init__(self):
+        self.calculator = Calculator()
+        self.calculator_tool_list = self._setup_tools()
+
+    def _setup_tools(self) -> List:
+        """Setup all tools for the calculator tool"""
+        @tool
+        def estimate_total_hotel_cost(price_per_night:str, total_days:float) -> float:
+            """Calculate total hotel cost"""
+            return self.calculator.multiply(int(price_per_night), int(total_days))
+
+        @tool
+        def calculate_total_expenses(*costs: float) -> float:
+            """Calculate total expenses"""
+            return self.calculator.calculate_tools(*costs)
+
+        @tool
+        def calculate_daily_expenses_budget(total_cost: float, days: int) -> float:
+            """Calculate daily expenses"""
+            return self.calculator.calculate_daily_budget(total_cost, days)
+
+        return [estimate_total_hotel_cost, calculate_total_expenses, calculate_daily_expenses_budget]
