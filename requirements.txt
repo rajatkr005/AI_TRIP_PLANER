@@ -17,6 +17,6 @@ requests
 langchain_experimental
 langchain_google_community
 langchain_tavily
-
+langchain-google-community[places]
 
 -e .

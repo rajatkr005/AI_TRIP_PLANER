@@ -56,4 +56,4 @@ class PlaceSearchTool():
                     return f"Following are the transportation options of {place} as  suggested by google: {transportation_result}"
             except Exception as e:
                 return f"Google cannot find the details dur to {e}. \nPlease try again later."
-                            
+        return [search_attractions, searh_restaurants, search_activities, search_transportation]                    

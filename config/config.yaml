@@ -4,4 +4,4 @@ llm:
     model_name: "gemini-3.5-flash-lite"  
   groq:
     provider: "groq"
-    model_name: "deepseek-r1-distill-llama-70b"
+    model_name: "qwen/qwen3.8-27b"

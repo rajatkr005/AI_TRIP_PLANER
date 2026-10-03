@@ -41,7 +41,7 @@ class ModelLoader(BaseModel):
             llm = ChatGroq(model=model_name, api_key=groq_api_key)
         elif self.model_provider == 'google':
             print("Loading LLM from google............")
-            google_api_key = os.getenv("GOOGLE_API_KEY")
+            google_api_key = os.getenv("GEMINI_API_KEY")
             model_name = self.config['llm']['google']['model_name']
             llm = ChatGoogleGenerativeAI(model=model_name, api_key=google_api_key)   
         return llm         

@@ -5,7 +5,7 @@ from langchain_google_community import GooglePlacesTool, GooglePlacesAPIWrapper
 
 class GooglePlaceSearchTool:
     def __init__(self, api_key: str):
-        self.places_wrapper = GooglePlacesAPIWrapper(gpalces_api=api_key)
+        self.places_wrapper = GooglePlacesAPIWrapper(gplaces_api_key=api_key)
         self.places_tool = GooglePlacesTool(api_wrappper=self.places_wrapper)
 
     def google_search_attraction(self, place:str) -> dict:

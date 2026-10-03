@@ -12,10 +12,10 @@ class CalculatorTool():
         @tool
         def estimate_total_hotel_cost(price_per_night:str, total_days:float) -> float:
             """Calculate total hotel cost"""
-            return self.calculator.multiply(int(price_per_night), int(total_days))
+            return self.calculator.multiply(int(price_per_night.replace("₹", "").replace("INR","").replace(",","").strip()), int(total_days))
 
         @tool
-        def calculate_total_expenses(*costs: float) -> float:
+        def calculate_total_expenses(costs: List[float]) -> float:
             """Calculate total expenses"""
             return self.calculator.calculate_tools(*costs)
 
