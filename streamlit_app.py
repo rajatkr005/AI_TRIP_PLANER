@@ -2,6 +2,7 @@
 import streamlit as st
 import datetime
 import requests
+import uuid
 
 # ============================================================
 # CONFIGURATION
@@ -283,6 +284,9 @@ st.markdown(
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+if "session_id" not in st.session_state:
+    st.session_state.session_id = str(uuid.uuid4())    
+
 # ============================================================
 # SIDEBAR
 # ============================================================
@@ -506,6 +510,7 @@ if submit_button and user_input.strip():
         with st.spinner("🌍 Exploring destinations and creating your itinerary..."):
 
             payload = {
+                "session_id": st.session_state.session_id,
                 "question": user_input
             }
 
