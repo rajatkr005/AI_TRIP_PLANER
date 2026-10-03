@@ -1,5 +1,5 @@
 from pyexpat.errors import messages
-
+from langchain_core.messages import HumanMessage, AIMessage
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -45,14 +45,10 @@ async def query_travel_agent(query: QueryRequest):
         # Assuming request is a pydantic object like {"question": "your text"}
         history = conversation_history.get(query.session_id, [])
 
-        mesmessages = {
+        messages = {
         "messages": history + [
-            {
-                "role": "user",
-                "content": query.question
-            }
-        ]
-    
+        HumanMessage(content=query.question)
+    ]
 }
         output = react_app.invoke(messages)
 
@@ -60,8 +56,8 @@ async def query_travel_agent(query: QueryRequest):
         if isinstance(output, dict) and "messages" in output:
             final_output = output['messages'][-1].content # Last AI response
             conversation_history.setdefault(query.session_id, [])
-            conversation_history[query.session_id].append({"role": "user", "contents": query.question})
-            conversation_history[query.session_id].append({"role": "assistant", "contents": final_output})
+            conversation_history[query.session_id].append(HumanMessage(content=query.question))
+            conversation_history[query.session_id].append(AIMessage(content=final_output))
         else:
             final_output = str(output)
 
@@ -82,23 +78,20 @@ async def query_travel_agent(query: QueryRequest):
                 # Assuming request is a pydantic object like {"question": "your text"}
                 history = conversation_history.get(query.session_id, [])
         
-                mesmessages = {
-                "messages": history + [
-                    {
-                        "role": "user",
-                        "content": query.question
-                    }
-                ]
             
-        }
+                messages = {
+                        "messages": history + [
+                        HumanMessage(content=query.question)
+                    ]
+                }
                 output = react_app.invoke(messages)
         
                 # If result is dict with messages:
                 if isinstance(output, dict) and "messages" in output:
                     final_output = output.content[0].get("text")                   
                     conversation_history.setdefault(query.session_id, [])
-                    conversation_history[query.session_id].append({"role": "user", "contents": query.question})
-                    conversation_history[query.session_id].append({"role": "assistant", "contents": final_output})
+                    conversation_history[query.session_id].append(HumanMessage(content=query.question))
+                    conversation_history[query.session_id].append(AIMessage(content=final_output))
                 else:
                     final_output = str(output)
         
