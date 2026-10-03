@@ -21,7 +21,10 @@ class WeatherInfoTool:
             if weather_data:
                 temp = weather_data.get('main', {}).get('temp','N/A')
                 desc = weather_data.get('weather', [{}])[0].get('description', 'N/A')
+                print(desc)
                 return f"Current weather in {city}: {temp}C, {desc}"
+            print(f"Could not fetch current weather for {city}")
+            return f"Could not fetch current weather for {city}"
 
         @tool
         def get_weather_forecast(city: str) -> str:
@@ -35,6 +38,8 @@ class WeatherInfoTool:
                     temp = item['main']['temp']
                     desc = item['weather'][0]['description']
                     forecast_summary.append(f"{date}: {temp} degree celcius , {desc}")
+                print(forecast_summary)
                 return f"Weather forecast for {city}:\n" + "\n".join(forecast_summary)
+            print(f"Could not fetch forecast for {city}")
             return f"Could not fetch forecast for {city}"
         return [get_current_weather, get_weather_forecast]        

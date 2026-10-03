@@ -1,40 +1,95 @@
 import os
 import json
 from langchain_tavily import TavilySearch
-from langchain_google_community import GooglePlacesTool, GooglePlacesAPIWrapper
+import requests
+
 
 class GooglePlaceSearchTool:
+
     def __init__(self, api_key: str):
-        self.places_wrapper = GooglePlacesAPIWrapper(gplaces_api_key=api_key)
-        self.places_tool = GooglePlacesTool(api_wrappper=self.places_wrapper)
+        self.api_key = api_key
+        self.url = "https://places.googleapis.com/v1/places:searchText"
 
-    def google_search_attraction(self, place:str) -> dict:
-        """
-        Searches for attraction in the specified place  using GooglePlaces API.
-        """    
-        return self.places_tool.run(f"top attraction places in the around {place}")
+        if not self.api_key:
+            raise ValueError("GPLACES_API_KEY is not set.")
 
-    def google_search_restaurants(self, place:str) -> dict:
-        """
-        Searches for available restaurants in the specified place using GooglePlaces API.
-        """
-        return self.places_tool.run(f"what are the top 10 restuarants and eateries in and around {place}?")
+        print("Google Places API (New) is ready")
 
-    def google_search_activity(self, place: str) -> dict:
-        """
-        Searches for popular activities in the specified place using GooglePlaces API.
-        """
-        return self.places_tool.run(f"Activities in the around {place}")
+    def _search(self, query: str):
+        headers = {
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": self.api_key,
+            "X-Goog-FieldMask": (
+                "places.displayName,"
+                "places.formattedAddress,"
+                "places.rating,"
+                "places.userRatingCount,"
+                "places.types"
+            )
+        }
 
-    def google_search_transportation(self, place: str) -> dict:
-        """
-        Searches for available modes of transportaion in the specified place using GooglePlaces API.
-        """
-        return self.places_tool.run(f"What are the different modes of transportation available in places {place}")
+        response = requests.post(
+            self.url,
+            headers=headers,
+            json={
+                "textQuery": query,
+                "pageSize": 10
+            },
+            timeout=20
+        )
 
+        response.raise_for_status()
+
+        data = response.json()
+
+        results = []
+
+        for place in data.get("places", []):
+            results.append({
+                "name": place.get("displayName", {}).get("text"),
+                "address": place.get("formattedAddress"),
+                "rating": place.get("rating"),
+                "user_rating_count": place.get("userRatingCount"),
+                "types": place.get("types", [])
+            })
+
+        return results
+
+    def google_search_attraction(self, place: str):
+        """
+        Searches for attractions in the specified place using GooglePlaces API.
+        """
+
+        return self._search(
+            f"top attractions in and around {place}"
+        )
+
+    def google_search_restaurants(self, place: str):
+        """
+        Searches for restaurants in the specified place using GooglePlaces API."""
+        return self._search(
+            f"top 10 restaurants and eateries in and around {place}"
+        )
+
+    def google_search_activity(self, place: str):
+        """
+        Searches for popular activities in the specified place using GooglePlaces API."""
+        return self._search(
+            f"popular activities and things to do in {place}"
+        )
+
+    def google_search_transportation(self, place: str):
+        """
+        Searches for available modes of transportation in the specified place using GooglePlaces API.
+        """
+        return self._search(
+            f"transportation options and transit stations in {place}"
+        )
+
+    
 class TavilyPlaceSearchTool:
     def __init__(self):
-        pass    
+        print("TavilyPlacesearch tool are calling")
 
     def tavily_search_attractions(self, place: str) -> dict:
         """

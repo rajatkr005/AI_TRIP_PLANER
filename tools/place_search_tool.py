@@ -9,7 +9,7 @@ class PlaceSearchTool():
     def __init__(self):
         load_dotenv()
         self.google_api_key = os.environ.get("GPLACES_API_KEY")
-        self.google_place_search = GooglePlaceSearchTool(self.google_api_key)
+        self.google_places_search = GooglePlaceSearchTool(self.google_api_key)
         self.tavily_search = TavilyPlaceSearchTool()
         self.place_search_tool_list = self._setup_tools()
 
@@ -20,9 +20,11 @@ class PlaceSearchTool():
             """Search attractions in a place"""
             try:
                 attraction_result = self.google_places_search.google_search_attraction(place)
+                print(f"Attraction result from Google")
                 if attraction_result:
                     return f"Following are the attractions of {place} as  suggested by google: {attraction_result}"
             except Exception as e:
+                print(f"Error occurred while searching attractions using Google: {e}")
                 tavily_result = self.tavily_search.tavily_search_attractions(place)
                 return f"Google cannot find the details dur to {e}. \nFollowing are the attractions of {place} as suggested by Tavily: {tavily_result}"
 
@@ -31,9 +33,11 @@ class PlaceSearchTool():
             """Search restaurants in a place"""
             try:
                 restaurant_result = self.google_places_search.google_search_restaurants(place)
+                print(f"Restaurant result from Google")
                 if restaurant_result:
                     return f"Following are the restaurants of {place} as  suggested by google: {restaurant_result}"
             except Exception as e:
+                print(f"Error occurred while searching restaurants using Google: {e}")
                 tavily_result = self.tavily_search.tavily_search_restaurants(place)
                 return f"Google cannot find the details dur to {e}. \nFollowing are the restaurants of {place} as suggested by Tavily: {tavily_result}"
 
@@ -42,9 +46,12 @@ class PlaceSearchTool():
             """Search activities in a place"""
             try:
                 activity_result = self.google_places_search.google_search_activity(place)
+                print(f"Activity result from Google")
                 if activity_result:
                     return f"Following are the activities of {place} as  suggested by google: {activity_result}"
             except Exception as e:
+                print("Error occurred while searching activities using Google:", e)
+                tavily_result = self.tavily_search.tavily_search_activity(place)
                 return f"Google cannot find the details dur to {e}. \nPlease try again later."
 
         @tool
@@ -55,5 +62,7 @@ class PlaceSearchTool():
                 if transportation_result:
                     return f"Following are the transportation options of {place} as  suggested by google: {transportation_result}"
             except Exception as e:
+                print("Error occurred while searching transportation using Google:", e)
+                tavily_result = self.tavily_search.tavily_search_transportation(place)
                 return f"Google cannot find the details dur to {e}. \nPlease try again later."
         return [search_attractions, searh_restaurants, search_activities, search_transportation]                    

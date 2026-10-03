@@ -22,7 +22,7 @@ app.add_middleware(
 
 
 class QueryRequest(BaseModel):
-    question: str
+    question: str    
 
 @app.post("/query")
 async def query_travel_agent(query: QueryRequest):
@@ -66,8 +66,9 @@ async def query_travel_agent(query: QueryRequest):
             output = react_app.invoke(messages)
             
             # If result is dict with messages:
-            if isinstance(output, dict) and "messages" in output:
-                final_output = output['messages'][-1].content # Last AI response
+            if isinstance(output, dict):
+                print(output)
+                final_output = output.content[0].get("text").content # Last AI response
             else:
                 final_output = str(output)
             
